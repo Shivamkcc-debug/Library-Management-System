@@ -19,7 +19,6 @@ A web-based Library Management System developed using Flask and SQLite.
 - SQLite
 - HTML
 - CSS
-- JavaScript
 
 ## Installation
 
