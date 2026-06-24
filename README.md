@@ -1,4 +1,4 @@
-﻿# Library Management System
+Library Management System
 
 A web-based Library Management System developed using Flask and SQLite.
 
