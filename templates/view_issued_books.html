@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Issued Books{% endblock %}
+{% block page_title %}Issued Books{% endblock %}
+
+{% block content %}
+<div class="table-container">
+  <div class="table-toolbar">
+    <h2>📋 Issued Books</h2>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+      <!-- Tab filters -->
+      <div class="tab-filters">
+        <a href="{{ url_for('view_issued_books', status='all', q=query) }}"
+           class="tab-btn {{ 'active' if status_filter == 'all' }}">All</a>
+        <a href="{{ url_for('view_issued_books', status='active', q=query) }}"
+           class="tab-btn {{ 'active' if status_filter == 'active' }}">Active</a>
+        <a href="{{ url_for('view_issued_books', status='overdue', q=query) }}"
+           class="tab-btn {{ 'active' if status_filter == 'overdue' }}">⚠️ Overdue</a>
+        <a href="{{ url_for('view_issued_books', status='returned', q=query) }}"
+           class="tab-btn {{ 'active' if status_filter == 'returned' }}">Returned</a>
+      </div>
+      <!-- Search -->
+      <form class="search-form" method="GET" action="{{ url_for('view_issued_books') }}">
+        <input type="hidden" name="status" value="{{ status_filter }}">
+        <div class="input-group">
+          <input type="text" name="q" value="{{ query }}" placeholder="Search title, member…">
+          <button type="submit">🔍</button>
+        </div>
+        {% if query %}
+          <a href="{{ url_for('view_issued_books', status=status_filter) }}" class="btn btn-secondary btn-sm">✕</a>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Book</th>
+        <th>Category</th>
+        <th>Member</th>
+        <th>Roll No.</th>
+        <th>Issued</th>
+        <th>Due Date</th>
+        <th>Return Date</th>
+        <th>Days</th>
+        <th>Fine</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ib in issued_books %}
+      {% set is_overdue = (ib.return_date is none) and (ib.due_date < now.strftime('%Y-%m-%d %H:%M:%S')) %}
+      <tr class="{{ 'overdue-row' if is_overdue }}">
+        <td><strong>{{ ib.title }}</strong></td>
+        <td><span class="badge badge-primary">{{ ib.category }}</span></td>
+        <td>{{ ib.member_name }}</td>
+        <td><span class="badge badge-secondary">{{ ib.roll_number }}</span></td>
+        <td>{{ ib.issued_date[:10] }}</td>
+        <td>{{ ib.due_date[:10] }}</td>
+        <td>{{ ib.return_date[:10] if ib.return_date else '—' }}</td>
+        <td>{{ ib.number_of_days if ib.number_of_days is not none else '—' }}</td>
+        <td>{% if ib.fine > 0 %}<strong style="color:#dc2626;">₹{{ ib.fine }}</strong>{% else %}₹0{% endif %}</td>
+        <td>
+          {% if ib.return_date %}
+            <span class="badge badge-success">Returned</span>
+          {% elif is_overdue %}
+            <span class="badge badge-danger">Overdue</span>
+          {% else %}
+            <span class="badge badge-warning">Active</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="10">
+          <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <p>No records found for this filter.</p>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

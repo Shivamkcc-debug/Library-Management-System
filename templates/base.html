@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Library{% endblock %} — College Library System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">📚</div>
+      <h2>College Library</h2>
+      <p>Management System</p>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Overview</div>
+      <a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.endpoint == 'dashboard' }}">
+        <span class="nav-icon">🏠</span> Dashboard
+      </a>
+
+      <div class="nav-section-label">Books</div>
+      <a href="{{ url_for('view_books') }}" class="{{ 'active' if request.endpoint == 'view_books' }}">
+        <span class="nav-icon">📖</span> View Books
+      </a>
+      <a href="{{ url_for('add_book') }}" class="{{ 'active' if request.endpoint == 'add_book' }}">
+        <span class="nav-icon">➕</span> Add Book
+      </a>
+
+      <div class="nav-section-label">Members</div>
+      <a href="{{ url_for('view_members') }}" class="{{ 'active' if request.endpoint == 'view_members' }}">
+        <span class="nav-icon">👥</span> View Members
+      </a>
+      <a href="{{ url_for('add_member') }}" class="{{ 'active' if request.endpoint == 'add_member' }}">
+        <span class="nav-icon">👤</span> Add Member
+      </a>
+
+      <div class="nav-section-label">Circulation</div>
+      <a href="{{ url_for('issue_book') }}" class="{{ 'active' if request.endpoint == 'issue_book' }}">
+        <span class="nav-icon">📤</span> Issue Book
+      </a>
+      <a href="{{ url_for('return_book') }}" class="{{ 'active' if request.endpoint == 'return_book' }}">
+        <span class="nav-icon">📥</span> Return Book
+      </a>
+      <a href="{{ url_for('view_issued_books') }}" class="{{ 'active' if request.endpoint == 'view_issued_books' }}">
+        <span class="nav-icon">📋</span> Issued Books
+      </a>
+      <a href="{{ url_for('overdue_books') }}" class="{{ 'active' if request.endpoint == 'overdue_books' }}">
+        <span class="nav-icon">⚠️</span> Overdue Books
+      </a>
+    </div>
+    <div class="sidebar-footer">
+      <a href="{{ url_for('logout') }}">🚪 Logout</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="topbar">
+      <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+      <div class="topbar-right">
+        <span>👤 <span class="badge-admin">{{ session.get('username', 'Admin') }}</span></span>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-container">
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">
+                {% if category == 'success' %}✅{% elif category == 'danger' %}❌{% elif category == 'warning' %}⚠️{% else %}ℹ️{% endif %}
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+</body>
+</html>

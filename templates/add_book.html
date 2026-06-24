@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Add Book{% endblock %}
+{% block page_title %}Add New Book{% endblock %}
+
+{% block content %}
+<div class="form-card">
+  <h2>➕ Add a New Book</h2>
+  <form method="POST" action="{{ url_for('add_book') }}">
+    <div class="form-group">
+      <label>Book Title *</label>
+      <input type="text" name="title" placeholder="e.g. Introduction to Algorithms" required autofocus>
+    </div>
+    <div class="form-group">
+      <label>Author(s) *</label>
+      <input type="text" name="author" placeholder="e.g. Cormen, Leiserson, Rivest">
+    </div>
+    <div class="form-group">
+      <label>Category / Department *</label>
+      <select name="category" required>
+        <option value="">Select category…</option>
+        {% for cat in categories %}
+          <option value="{{ cat }}">{{ cat }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Number of Copies *</label>
+      <input type="number" name="quantity" min="1" value="1" required>
+    </div>
+    <div style="display:flex; gap:12px; margin-top:8px;">
+      <button type="submit" class="btn btn-primary" style="flex:1;">📚 Add Book</button>
+      <a href="{{ url_for('view_books') }}" class="btn btn-secondary" style="flex:1; justify-content:center;">Cancel</a>
+    </div>
+  </form>
+  <p style="margin-top:14px; font-size:0.82rem; color:#94a3b8;">
+    💡 If a book with the same title and author already exists, its quantity will be increased.
+  </p>
+</div>
+{% endblock %}

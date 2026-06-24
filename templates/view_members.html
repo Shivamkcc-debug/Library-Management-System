@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}View Members{% endblock %}
+{% block page_title %}Members{% endblock %}
+
+{% block content %}
+<div class="table-container">
+  <div class="table-toolbar">
+    <h2>👥 All Members</h2>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+      <form class="search-form" method="GET" action="{{ url_for('view_members') }}">
+        <div class="input-group">
+          <input type="text" name="q" value="{{ query }}" placeholder="Search name, roll number…">
+          <button type="submit">🔍</button>
+        </div>
+        <select name="department" class="filter-select" onchange="this.form.submit()">
+          <option value="">All Departments</option>
+          {% for dept in departments %}
+            <option value="{{ dept }}" {% if dept == dept_filter %}selected{% endif %}>{{ dept }}</option>
+          {% endfor %}
+        </select>
+        {% if query or dept_filter %}
+          <a href="{{ url_for('view_members') }}" class="btn btn-secondary btn-sm">✕ Clear</a>
+        {% endif %}
+      </form>
+      <a href="{{ url_for('add_member') }}" class="btn btn-primary btn-sm">👤 Add Member</a>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Roll No.</th>
+        <th>Name</th>
+        <th>Department</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Books Issued</th>
+        <th>Join Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for member in members %}
+      <tr>
+        <td><span class="badge badge-primary">{{ member.roll_number }}</span></td>
+        <td><strong>{{ member.name }}</strong></td>
+        <td>{{ member.department }}</td>
+        <td>{{ member.email or '—' }}</td>
+        <td>{{ member.phone or '—' }}</td>
+        <td>
+          {% set cnt = issue_counts.get(member.id, 0) %}
+          {% if cnt == 3 %}
+            <span class="badge badge-danger">{{ cnt }}/3 (Max)</span>
+          {% elif cnt > 0 %}
+            <span class="badge badge-warning">{{ cnt }}/3</span>
+          {% else %}
+            <span class="badge badge-success">0/3</span>
+          {% endif %}
+        </td>
+        <td>{{ member.join_date }}</td>
+        <td>
+          <div class="action-btns">
+            <a href="{{ url_for('edit_member', member_id=member.id) }}" class="btn btn-warning btn-sm">✏️ Edit</a>
+            <form method="POST" action="{{ url_for('delete_member', member_id=member.id) }}"
+                  onsubmit="return confirm('Delete member {{ member.name }}?');" style="display:inline;">
+              <button type="submit" class="btn btn-danger btn-sm">🗑️</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8">
+          <div class="empty-state">
+            <div class="empty-icon">👤</div>
+            <p>No members found. <a href="{{ url_for('add_member') }}">Register one now</a>.</p>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

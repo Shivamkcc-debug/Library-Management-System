@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            color: #000000; /* White text color */
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent scrolling */
+        }
+        #background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1; /* Ensure the video is behind other content */
+        }
+        header {
+            background-color: rgba(0, 0, 0, 0.7); /* Dark background for header */
+            padding: 20px;
+            text-align: center;
+            position: relative; /* Position relative for overlay */
+            z-index: 1; /* Ensure header is above overlay */
+        }
+        h2 {
+            color: #0b0b0b; /* Gold color for the main title */
+            font-size: 2.5em;
+            margin: 0;
+            text-align: left;
+        }
+        h2 {
+            color: #000000; /* OrangeRed color for subheading */
+            text-align: left;
+        }
+        p {
+            color: #FFD700; /* Gold color for paragraph */
+            font-size: 1.2em;
+            margin: 10px 0;
+            text-align: left;
+        }
+        nav {
+            margin-top: 15px;
+        }
+        nav a {
+            background-color: #FFD700; /* Gold color for buttons */
+            color: #000; /* Black text color */
+            padding: 10px 15px;
+            margin: 0 10px;
+            text-decoration: none;
+            border-radius: 5px; /* Rounded corners */
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+        nav a:hover {
+            background-color: #FF4500; /* Change color on hover */
+        }
+        #library-info {
+            color: #ffb700; /* Gold color for text */
+            margin: 20px 0; /* Add margin for spacing */
+            text-align: left;
+        }
+        #library-info h2 {
+            font-size: 2em; /* Increase font size for headings */
+            color: #121212; /* OrangeRed color for headings */
+        }
+        #library-info ul {
+            font-size: 1.2em; /* Increase font size for list items */
+        }
+        #event-announcements {
+            padding: 10px; /* Add padding for better appearance */
+            background-color: rgba(255, 238, 0, 0.751); /* Optional: semi-transparent background */
+        }
+    </style>
+</head>
+<body>
+    <video autoplay loop muted id="background-video">
+        <source src="{{ url_for('static', filename='videos/your_video.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <header>
+        <h1>Library Management System</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/add_book">Add Book</a>
+            <a href="/view_books">View Books</a>
+            <a href="/add_member">Add Member</a>
+            <a href="/view_members">View Members</a>
+            <a href="/issue_book">Issue Book</a>
+            <a href="/return_book">Return Book</a>
+            <a href="/view_issued_books">View Issued Books</a>
+        </nav>
+    </header>
+    <main>
+        <h2 id="welcome" class="animate-right">Welcome to the Library!</h2>
+        <p id="intro" class="animate-left" style="color: #ffd900;">Here you can manage books and members.</p>
+        
+        <section id="library-info">
+            <h2 id="rules-title" class="animate-right">Library Rules</h2>
+            <ul id="rules-list" class="animate-left">
+                <li>Borrowing Limit: Max 3 books; return within 15 days.</li>
+                <li>Fines: ₹45 per day for overdue returns.</li>
+                <li>Membership: Only registered members can borrow books.</li>
+                <li>Silence: Maintain silence; phones on silent mode.</li>
+                <li>Damaged Books: Members are responsible for lost/damaged books.</li>
+                <li>Timings: Open 9:00 AM - 8:00 PM, Monday to Saturday.</li>
+            </ul>
+            <h2 id="features-title" class="animate-right">Features</h2>
+            <ul id="features-list" class="animate-left">
+                <li>Book Management: Add and view books easily.</li>
+                <li>Member Management: Register and view members.</li>
+                <li>Book Issue/Return: Streamlined process with due date and fine tracking.</li>
+                <li>Dashboard: View issued books and member details at a glance.</li>
+            </ul>
+        </section>
+        <div id="event-announcements">
+            <marquee behavior="scroll" direction="left">
+                "Libraries are the wardrobe to everything you could ever imagine." — Beatrice Schenk de Regniers | "A library is a place where you can lose your innocence without losing your virginity." — Germaine Greer | "Google can bring you back 100,000 answers. A librarian can bring you back the right one." — Neil Gaiman | "Perhaps no place in any community is so totally democratic as the town library. The only entrance requirement is interest." — Lady Bird Johnson | "A library is a hospital for the mind." — Anonymous | "Libraries will get you through times of no money better than money will get you through times of no libraries." — Anne Herbert | "To build up a library is to create a life. It’s never just a random collection of books." — Carlos María Domínguez | "The truth is libraries are raucous clubhouses for free speech, controversy, and community." — Paula Poundstone | "Books are the plane, and the train, and the road. They are the destination and the journey. They are home." — Anna Quindlen | "Libraries were full of ideas – perhaps the most dangerous and powerful of all weapons." — Sarah J. Maas | "Reading is dreaming with open eyes." — Anonymous | "The only thing you absolutely have to know is the location of the library." — Albert Einstein | "I ransack public libraries and find them full of sunk treasure." — Virginia Woolf | "A library is a place where you learn what teachers were afraid to teach you." — Alan Ginsberg | "When you are in doubt, go to the library." — J.K. Rowling | "Libraries are where it all begins." — Rita Dove | "A library is the great gymnasium where we go to make our minds strong." — Robert Green Ingersoll | "Libraries are not made; they grow." — Augustine Birrell
+            </marquee>
+        </div>
+    </main>
+    <script>
+        const elements = [
+            'welcome',
+            'intro',
+            'rules-title',
+            'rules-list',
+            'features-title',
+            'features-list'
+        ];
+
+        let delay = 0;
+        elements.forEach(id => {
+            setTimeout(() => {
+                document.getElementById(id).classList.add('animate-left');
+            }, delay);
+            delay += 1000; // Increase delay for each element
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Overdue Books{% endblock %}
+{% block page_title %}Overdue Books{% endblock %}
+
+{% block content %}
+{% if overdue %}
+<div class="alert alert-danger" style="margin-bottom:20px;">
+  ⚠️ <strong>{{ overdue|length }} book(s)</strong> are currently overdue. Fine: ₹45 per day after 15 days.
+</div>
+{% endif %}
+
+<div class="table-container">
+  <div class="table-toolbar">
+    <h2>⚠️ Overdue Books</h2>
+    <span style="font-size:0.85rem; color:#64748b;">Fine Rate: ₹45 / day</span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Book</th>
+        <th>Category</th>
+        <th>Member</th>
+        <th>Roll No.</th>
+        <th>Department</th>
+        <th>Phone</th>
+        <th>Issued</th>
+        <th>Due Date</th>
+        <th>Days Overdue</th>
+        <th>Est. Fine</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in overdue %}
+      <tr class="overdue-row">
+        <td><strong>{{ row.title }}</strong></td>
+        <td><span class="badge badge-primary">{{ row.category }}</span></td>
+        <td>{{ row.member_name }}</td>
+        <td><span class="badge badge-danger">{{ row.roll_number }}</span></td>
+        <td>{{ row.department }}</td>
+        <td>{{ row.phone or '—' }}</td>
+        <td>{{ row.issued_date[:10] }}</td>
+        <td>{{ row.due_date[:10] }}</td>
+        <td><strong style="color:#dc2626;">{{ row.days_overdue }} days</strong></td>
+        <td><strong style="color:#dc2626;">₹{{ row.days_overdue * 45 }}</strong></td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="10">
+          <div class="empty-state">
+            <div class="empty-icon">✅</div>
+            <p>No overdue books! All issues are within due date.</p>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

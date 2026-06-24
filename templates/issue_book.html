@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Issue Book{% endblock %}
+{% block page_title %}Issue a Book{% endblock %}
+
+{% block content %}
+<div class="form-card">
+  <h2>📤 Issue a Book</h2>
+  <form method="POST" action="{{ url_for('issue_book') }}">
+    <div class="form-group">
+      <label>Select Book *</label>
+      <select name="book_id" required>
+        <option value="">— Choose a book in stock —</option>
+        {% for book in books %}
+          <option value="{{ book.id }}">{{ book.title }} by {{ book.author }} ({{ book.quantity }} left) [{{ book.category }}]</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Select Member *</label>
+      <select name="member_id" required>
+        <option value="">— Choose a member —</option>
+        {% for member in members %}
+          <option value="{{ member.id }}">{{ member.name }} — {{ member.roll_number }} ({{ member.department }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Issue Date *</label>
+        <input type="date" name="issue_date" required
+               value="{{ now.strftime('%Y-%m-%d') }}">
+      </div>
+      <div class="form-group">
+        <label>Issue Time *</label>
+        <input type="time" name="issue_time" required
+               value="{{ now.strftime('%H:%M') }}">
+      </div>
+    </div>
+    <div class="card" style="margin:4px 0 18px; padding:12px 16px; background:#eef2ff; border-color:#c7d2fe;">
+      <p style="font-size:0.82rem; color:#4338ca; margin:0;">
+        📌 <strong>Rules:</strong> Each member can borrow up to 3 books for 15 days. Fine of ₹45/day after due date.
+      </p>
+    </div>
+    <div style="display:flex; gap:12px;">
+      <button type="submit" class="btn btn-primary" style="flex:1;">📤 Issue Book</button>
+      <a href="{{ url_for('view_issued_books') }}" class="btn btn-secondary" style="flex:1; justify-content:center;">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

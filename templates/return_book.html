@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Return Book{% endblock %}
+{% block page_title %}Return a Book{% endblock %}
+
+{% block content %}
+<div class="form-card">
+  <h2>📥 Return a Book</h2>
+  {% if active_issues %}
+  <form method="POST" action="{{ url_for('return_book') }}">
+    <div class="form-group">
+      <label>Select Issued Record *</label>
+      <select name="issue_id" required>
+        <option value="">— Choose book to return —</option>
+        {% for issue in active_issues %}
+          <option value="{{ issue.id }}">
+            {{ issue.title }} → {{ issue.name }} ({{ issue.roll_number }}) | Due: {{ issue.due_date[:10] }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Return Date *</label>
+        <input type="date" name="return_date" required value="{{ now.strftime('%Y-%m-%d') }}">
+      </div>
+      <div class="form-group">
+        <label>Return Time *</label>
+        <input type="time" name="return_time" required value="{{ now.strftime('%H:%M') }}">
+      </div>
+    </div>
+    <div class="card" style="margin:4px 0 18px; padding:12px 16px; background:#fef3c7; border-color:#fde68a;">
+      <p style="font-size:0.82rem; color:#92400e; margin:0;">
+        ⚠️ Fine of <strong>₹45/day</strong> will be applied if returned after the due date.
+      </p>
+    </div>
+    <div style="display:flex; gap:12px;">
+      <button type="submit" class="btn btn-success" style="flex:1;">📥 Process Return</button>
+      <a href="{{ url_for('view_issued_books') }}" class="btn btn-secondary" style="flex:1; justify-content:center;">Cancel</a>
+    </div>
+  </form>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">✅</div>
+    <p>No books are currently issued. Nothing to return!</p>
+    <a href="{{ url_for('issue_book') }}" class="btn btn-primary" style="margin-top:16px;">Issue a Book</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

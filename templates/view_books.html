@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}View Books{% endblock %}
+{% block page_title %}Books Catalog{% endblock %}
+
+{% block content %}
+<div class="table-container">
+  <div class="table-toolbar">
+    <h2>📚 All Books</h2>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+      <form class="search-form" method="GET" action="{{ url_for('view_books') }}">
+        <div class="input-group">
+          <input type="text" name="q" value="{{ query }}" placeholder="Search title, author…">
+          <button type="submit">🔍</button>
+        </div>
+        <select name="category" class="filter-select" onchange="this.form.submit()">
+          <option value="">All Categories</option>
+          {% for cat in categories %}
+            <option value="{{ cat }}" {% if cat == category_filter %}selected{% endif %}>{{ cat }}</option>
+          {% endfor %}
+        </select>
+        {% if query or category_filter %}
+          <a href="{{ url_for('view_books') }}" class="btn btn-secondary btn-sm">✕ Clear</a>
+        {% endif %}
+      </form>
+      <a href="{{ url_for('add_book') }}" class="btn btn-primary btn-sm">➕ Add Book</a>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Category</th>
+        <th>Copies</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for book in books %}
+      <tr>
+        <td><span class="badge badge-secondary">{{ book.id }}</span></td>
+        <td><strong>{{ book.title }}</strong></td>
+        <td>{{ book.author }}</td>
+        <td><span class="badge badge-primary">{{ book.category }}</span></td>
+        <td>{{ book.quantity }}</td>
+        <td>
+          {% if book.quantity == 0 %}
+            <span class="badge badge-danger">Out of Stock</span>
+          {% elif book.quantity <= 2 %}
+            <span class="badge badge-warning">Low Stock</span>
+          {% else %}
+            <span class="badge badge-success">Available</span>
+          {% endif %}
+        </td>
+        <td>
+          <div class="action-btns">
+            <a href="{{ url_for('edit_book', book_id=book.id) }}" class="btn btn-warning btn-sm">✏️ Edit</a>
+            <form method="POST" action="{{ url_for('delete_book', book_id=book.id) }}"
+                  onsubmit="return confirm('Delete this book?');" style="display:inline;">
+              <button type="submit" class="btn btn-danger btn-sm">🗑️</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="7">
+          <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <p>No books found. <a href="{{ url_for('add_book') }}">Add one now</a>.</p>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
